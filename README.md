@@ -20,3 +20,33 @@ Company's database has been set up in a cascading model instead of a more typica
 - "<b>productdetails</b>" - This table provides details on all products found on all subscription outlining product price history across subscription lifecycle
 
 Example: user1 ("users") has 2 subscriptions ("subscriptions") with 3 products ("subscriptionproducts") all of which had their price changed 3 times ("productdetails") - 18 records
+
+## Creating tables
+
+Please refer to <b>sql files/create tables.sql</b> file
+
+Each table has been created with a unique VARCHAR(6) primary key 'Id' that are used as foreign keys to the remaining tables as shown in the model above. It has been randomly generated to ensure uniquness which is fine for this project, however a much more effective and safe approach would be to use BIGINT or UUID as primary keys. 
+
+All standard data types have been used such as DECIMAL, BOOLEAN, VARCHAR, DATE and TIMESTAMP with character lengths/number of digits allowed handcrafted for the prepared dataset. Normally one should execute much more caution to properly account for what data might be coming in the future to avoid having to alter already existing tables with many records.
+
+Also a non-standard ENUM(value1,value2) approach was used to restrict allow values, however it's advisable to introduce such restraints upstream (for example in a dim table) which is much more efficient and future proof. It's fine for this pre-defined project, however it's known to have bad performance and creates unnecessary roadblocks when adding/altering allowed column values.
+
+## Inserting data
+
+Please refer to <b>sql files/data ingest.sql</b> file
+
+My databases has been populated with data via a csv files upload directly into the created tables. I utilized a native upload folder for MySQL Server 8.0 that allowed me to use LOAD DATA INFILE command to insert data after having specified the delimiters, making sure to ingore the first line containing table headers.
+
+## Creating SQL view for data analysis
+
+Please refer to <b>sql files/create view.sql</b> file
+
+As mentioned in the introduction, the business seeks to align subscription prices for its subscribers in various markets. All territories have a market price that subscriptions are sold at, but still there are many users who have subscribed at a previous lower price point.
+
+The main question that the business first wants to have answered is <b>"How many subscribers do we have in each market at a given price point and what type of subscription do they hold?"</b>. 
+
+After this questions is answered, we'll look to investigate which territories have the largest population of underpriced subscriptions and various other trends.
+To achieve this a SQL view is to be created and then loaded into PowerBI to limit the amount of data manipulation required via DAX. This approach helps keep the data preparation upstream and is much more performant and reliable than using the BI tool to manipulate data.
+![View results sample](https://github.com/vuoteen/subscribers-userbase/assets/166431469/9583a715-0651-461b-9cc7-1e9c263de2f5)
+
+
