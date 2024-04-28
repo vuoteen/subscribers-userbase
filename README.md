@@ -23,7 +23,7 @@ Company's database has been set up in a cascading model instead of a more typica
 
 Example: user1 ("users") has 2 subscriptions ("subscriptions") with 3 products ("subscriptionproducts") all of which had their price changed 3 times ("productdetails") - 18 records
 
-## Creating tables
+## Tables creations
 
 Please refer to <b>sql files/create tables.sql</b> file
 
@@ -33,13 +33,13 @@ All standard data types have been used such as DECIMAL, BOOLEAN, VARCHAR, DATE a
 
 Also a non-standard ENUM(value1,value2) approach was used to restrict allow values, however it's advisable to introduce such restraints upstream (for example in a dim table) which is much more efficient and future proof. It's fine for this pre-defined project, however it's known to have bad performance and creates unnecessary roadblocks when adding/altering allowed column values.
 
-## Inserting data
+## Data ingestion
 
 Please refer to <b>sql files/data ingest.sql</b> file
 
 My databases has been populated with data via a csv files upload directly into the created tables. I utilized a native upload folder for MySQL Server 8.0 that allowed me to use LOAD DATA INFILE command to insert data after having specified the delimiters, making sure to ingore the first line containing table headers.
 
-## Creating SQL view for data analysis
+## SQL view for data analysis
 
 Please refer to <b>sql files/create view.sql</b> file
 
@@ -62,5 +62,8 @@ Also the stakeholders wanted to have a few aggregated subscriptions counts which
 
 The only filter is selecting the dense_rank = 1 which is keeping only the latest price point of the subscription lifecycle. This is the only reason why we needed to create a cte in the first place, as it's not possible to create a rank and filter it in the same query due to MySQL execution order.<br> If we were using Snowflake for example, we could use QUALIFY operator in the dense_rank command to filter it immediately, skipping the cte. 
 
-Lastly the required grouping is set up and ordering to improve data visibility.
+Lastly the required grouping is set up with ordering to improve data visibility.
 
+## PowerBI dashboard
+
+The "subscription_breakdown" view, which is going to be the main data source for the analysis, has been loaded into PowerBI through the MySQL Server connection. The four tables from the database, although technically redudant, have been loaded as well to help visualize data relationships. Additionally two additional tables are added (via xlsx fines) with relatioships created to the view - "new_season_price" which holds target prices for the price increase initiative and "fx_rates" which will be used in the financial piece of the analysis. 
