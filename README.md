@@ -58,6 +58,7 @@ Firstly the common table expression (cte) is created that joins all the tables t
 We then proceed to select the columns from cte, performing a few transformations, that should have ideally been done upstream in the data source
 - converting SubscriptionType NULL into 'Direct', 'Internet Provider' and 'Cable Provider' into 'Third-Party'
 - inferring the plan type from the product name string using LIKE '%(...)%' operator<br>
+
 Also the stakeholders wanted to have a few aggregated subscriptions counts which were introduced via summing various partitioned counts - total count, per subscription category, subscription type, plan type and subscription country.
 
 The only filter is selecting the dense_rank = 1 which is keeping only the latest price point of the subscription lifecycle. This is the only reason why we needed to create a cte in the first place, as it's not possible to create a rank and filter it in the same query due to MySQL execution order.<br> If we were using Snowflake for example, we could use QUALIFY operator in the dense_rank command to filter it immediately, skipping the cte. 
@@ -66,4 +67,40 @@ Lastly the required grouping is set up with ordering to improve data visibility.
 
 ## PowerBI dashboard
 
-The "subscription_breakdown" view, which is going to be the main data source for the analysis, has been loaded into PowerBI through the MySQL Server connection. The four tables from the database, although technically redudant, have been loaded as well to help visualize data relationships. Additionally two additional tables are added (via xlsx fines) with relatioships created to the view - "new_season_price" which holds target prices for the price increase initiative and "fx_rates" which will be used in the financial piece of the analysis. 
+The "subscription_breakdown" view, which is going to be the main data source for the analysis, has been loaded into PowerBI through the MySQL Server connection. The four tables from the database, although technically redudant, have been loaded as well to help visualize data relationships. Additionally two additional tables are added (via xlsx fines) with relatioships created to the view - "new_season_price" which holds target prices for the price increase initiative and "fx_rates" which is used for the financial piece of the analysis. 
+
+Two DAX columns were introduced to "subscription_breakdown". The first one "SubscriptionPrice" is inferring the true price the customer is paying from MonthlyPrice column by either multiplying it by 12 in case of Annual subscriptions or keeping the value unaltered for monthly subscriptions. The other new column "Is_At_Season_Price" is looking up the newly created SubscriptionPrice value in the "new_season_price" to answer whether a particular user cohort needs a price increase or whether they are already on the correct new season price. Lastly, around a dozen of DAX measures are created and stored exclusively in the designated table "#Measures".
+
+### <i>Season price users breakdown</i>
+
+The first visual is focused on the general number of subscribers per country and the proportion of subscribers already at the correct price point.<br> Over half of the existing users are already paying the designated amount with varying trends in particular markets. Five of them have more correctly priced users than the global average, with no particular outlier. The remaining five markets dip below the global average with Japan scoring particularly weak with just over 29% of users at correct price point. <br>
+
+![User breakdown visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/2fc78428-634f-4700-a7bb-75a977caf418)
+
+While hovering over a given country's column the user will see a custom tooltip providing more details on the user distribution
+![User breakdown tooltip visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/1e97ba34-0400-4576-89b7-90918fcf5344)
+
+### <i>Monetization changes</i>
+
+Having learned that there is over 42% existing users that the business wants to increase the price, the aim is now to forecast next season's revenue once the global pricing has been aligned. This model assumes the utopia scenario where none of the existing users churn. <br>
+This is achievied via "current_annual_revenue_eur" and "potential_annual_revenue_eur" measures that aggregate yearly subscription income from all subscribers at current and future prices. They are then juxtaposed together having been recalculated using the latest exchange rates.
+
+![Monetization changes](https://github.com/vuoteen/subscribers-userbase/assets/166431469/1b764476-6044-43c5-ba62-54627e93f177)
+
+The business is currently making €5.8 million from its subscribers looking to increase that number by €2.3 million to the total of €8.1 million in our utopia scenario. <br> Japan is looking to almost double its revenue which can be attributed to their lowers ratio of existing subscribers at next seasons' price. Australia is set to grow the least due to having the strongest ration of users at correct pricing that don't require price rising and a relatively mild price increase jump. <br> Monetarily speaking Japan is also looking to gain second-most (€386.99k) despite placing fifth in the current revenue ranking. The Netherlands stand to profit the most, amassing just shy of 40% of total EUR to be gained by the business, thanks to the biggest userbase of all markets and a fairly big number of users to price increase. Brazil is to see the weakest monteary difference of €26.6k due to low subscriber numbers and solid ratio of users at next season' pricing. 
+
+### <i>Product type breakdown</i>
+
+For end users that require more detail on product level an interactive map was created to provide insights into particular subscriber cohorts.
+
+![Interactive map visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/d4ae4ec8-211d-416e-bffa-0c4bac7397bb)
+
+After selecting the desired market and subscriber segmentation, the user can drill through to the detailed breakdown by following the explore button.
+
+![Interactive map drillthrough visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/4390a133-fd3d-4bc6-829c-9e876db3faf6)
+
+This visual displays the most granular breakdown where we can see how many subscribers there are at each product and price point as well as how much each user cohort stands to gain after the price increase initiative is completed.<br>
+For user convenience, a back button is available as well as a Settings table that displays the chosen conditions.
+
+
+
