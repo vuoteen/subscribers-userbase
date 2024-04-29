@@ -78,16 +78,17 @@ The first visual is focused on the general number of subscribers per country and
 ![User breakdown visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/2fc78428-634f-4700-a7bb-75a977caf418)
 
 While hovering over a given country's column the user will see a custom tooltip providing more details on the user distribution
+
 ![User breakdown tooltip visual](https://github.com/vuoteen/subscribers-userbase/assets/166431469/1e97ba34-0400-4576-89b7-90918fcf5344)
 
 ### <i>Monetization changes</i>
 
-Having learned that there is over 42% existing users that the business wants to increase the price, the aim is now to forecast next season's revenue once the global pricing has been aligned. This model assumes the utopia scenario where none of the existing users churn. <br>
+Having learned that there is over 42% existing users that the business wants to increase the price for, the aim is now to forecast next season's revenue once the global pricing has been aligned. This model assumes the utopia scenario where none of the existing users churn. <br>
 This is achievied via "current_annual_revenue_eur" and "potential_annual_revenue_eur" measures that aggregate yearly subscription income from all subscribers at current and future prices. They are then juxtaposed together having been recalculated using the latest exchange rates.
 
 ![Monetization changes](https://github.com/vuoteen/subscribers-userbase/assets/166431469/1b764476-6044-43c5-ba62-54627e93f177)
 
-The business is currently making €5.8 million from its subscribers looking to increase that number by €2.3 million to the total of €8.1 million in our utopia scenario. <br> Japan is looking to almost double its revenue which can be attributed to their lowers ratio of existing subscribers at next seasons' price. Australia is set to grow the least due to having the strongest ration of users at correct pricing that don't require price rising and a relatively mild price increase jump. <br> Monetarily speaking Japan is also looking to gain second-most (€386.99k) despite placing fifth in the current revenue ranking. The Netherlands stand to profit the most, amassing just shy of 40% of total EUR to be gained by the business, thanks to the biggest userbase of all markets and a fairly big number of users to price increase. Brazil is to see the weakest monteary difference of €26.6k due to low subscriber numbers and solid ratio of users at next season' pricing. 
+The business is currently making €5.8 million from its subscribers looking to increase that number by €2.3 million to the total of €8.1 million in our utopia scenario. <br> Japan is looking to almost double its revenue which can be attributed to their lowers ratio of existing subscribers at next seasons' price. Australia is set to grow the least due to having the strongest ratio of users at correct pricing that don't require price rising and a relatively mild price increase jump. <br> Monetarily speaking Japan is also looking to gain second-most (€386.99k) despite placing fifth in the current revenue ranking. The Netherlands stand to profit the most, amassing just shy of 40% of total EUR to be gained by the business, thanks to the biggest userbase of all markets and a fairly big number of users to price increase. Brazil is to see the weakest monetary difference of €26.6k due to low subscriber numbers and solid ratio of users at next season' pricing. 
 
 ### <i>Product type breakdown</i>
 
